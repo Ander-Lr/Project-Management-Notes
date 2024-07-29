@@ -10,6 +10,7 @@ import Model.GetStudentQuickSort;
 import Model.SaveStudent;
 import Model.SearchStudent;
 import Model.UpdateStudentNotes;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +18,10 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -337,18 +342,18 @@ public class Start extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setText("Nombre: ");
-        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
-        jPanel5.add(lblName, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 70, 20));
+        jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
+        jPanel5.add(lblName, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 100, 70, 20));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel9.setText("Apellido:");
-        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 90, -1, -1));
-        jPanel5.add(lblLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 90, 80, 20));
+        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 100, -1, -1));
+        jPanel5.add(lblLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 100, 80, 20));
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel11.setText("Identificacion:");
-        jPanel5.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, -1, -1));
-        jPanel5.add(lblIdentification, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 90, 80, 20));
+        jPanel5.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 100, -1, -1));
+        jPanel5.add(lblIdentification, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 100, 80, 20));
 
         tblAsignature.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -361,6 +366,11 @@ public class Start extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblAsignature.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAsignatureMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblAsignature);
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Asignatura");
@@ -370,7 +380,7 @@ public class Start extends javax.swing.JFrame {
         model.addColumn("Promedio");
         tblAsignature.setModel(model);
 
-        jPanel5.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 420, 180));
+        jPanel5.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 420, 180));
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel23.setText("Registro de Notas");
@@ -399,7 +409,7 @@ public class Start extends javax.swing.JFrame {
         jPanel5.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 90, 30));
 
         jLabel26.setText("Seleccionar Materia para Editar");
-        jPanel5.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, -1));
+        jPanel5.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
 
         btnSearch.setBackground(new java.awt.Color(51, 204, 255));
         btnSearch.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -603,6 +613,10 @@ public class Start extends javax.swing.JFrame {
     private void jLabel25MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel25MouseClicked
         row = tblAsignature.getSelectedRow();
         rowSave = row;
+        if (rowSave < 0) {
+            JOptionPane.showMessageDialog(this, "Elige una Materia para editar o registrar la nota");
+            return;
+        }
         setDates(student.getArrayList(), editTable(title, row));
     }//GEN-LAST:event_jLabel25MouseClicked
 
@@ -611,7 +625,6 @@ public class Start extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Elige una Materia para editar o registrar la nota");
             return;
         }
-        
         saveStudentNotes();
     }//GEN-LAST:event_btnSaveMouseClicked
 
@@ -624,13 +637,18 @@ public class Start extends javax.swing.JFrame {
         if (isValidId(id)) {
             searchStudent(id);
         } else {
-            JOptionPane.showMessageDialog(this, "Ingresa un numero de cedula");
+            JOptionPane.showMessageDialog(this, "Ingrese una identificacion para buscar");
         }
     }//GEN-LAST:event_btnSearch1MouseClicked
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
 
     }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void tblAsignatureMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAsignatureMouseClicked
+        row = -1;
+        row = tblAsignature.getSelectedRow();
+    }//GEN-LAST:event_tblAsignatureMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ButtonEdit;
@@ -699,17 +717,15 @@ public class Start extends javax.swing.JFrame {
             student = getStud.getStudent(id);
             if (student != null) {
                 displayStudentInfo(student);
-                /*
-                lblName.setText(student.getName());
-                lblLastName.setText(student.getFirtsLastName());
-                lblIdentification.setText(student.getIdentification());*/
                 setDates(student.getArrayList(), tableModel(title));
             } else {
                 JOptionPane.showMessageDialog(this, "No existe un registro con esa cedula");
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Ingrese la identificacion para buscar");
         }
     }
-    
+
     //Estable los datos principales de un estydiante
     private void displayStudentInfo(Student student) {
         lblName.setText(student.getName());
@@ -725,7 +741,7 @@ public class Start extends javax.swing.JFrame {
         }
         tblAsignature.setModel(model);
     }
-    
+
     // Crea y devulve un objecto con todas las asignaturas
     private Object[] createAsignatureRow(Asignature a) {
         Object[] obj = new Object[5];
@@ -737,7 +753,7 @@ public class Start extends javax.swing.JFrame {
         return obj;
     }
 
-    // Busca y establece los datos de un estudiante
+    // Busca y establece los datos de un estudiante   // Busqueda Secuencial
     public void searchStudent(String cedula) {
 
         String[] columnNames = new String[6];
@@ -749,10 +765,16 @@ public class Start extends javax.swing.JFrame {
 
         DefaultTableModel model = tableModel(columnNames);
 
+        boolean bandera = false;
         for (Student st : getStud.getStudent()) {
             if (st.getIdentification().equals(cedula)) {
                 setData(st, model);
+                bandera = true;
             }
+        }
+
+        if (!bandera) {
+            JOptionPane.showMessageDialog(this, "No existe un registro con esa cedula");
         }
     }
 
@@ -842,8 +864,8 @@ public class Start extends javax.swing.JFrame {
             System.err.println("Error converting string to double: " + e.getMessage());
         }
     }
-    
-    // Busca ma tarea correcta y actualiza la nota
+
+    // Busca ma tarea correcta y actualiza la nota   // Busqueda Secuencial
     private void updateStudentGrades(String asignature, double nota1, double nota2, double nota3, double promedio) {
         for (Asignature a : student.getArrayList()) {
             if (a.getName().equals(asignature)) {
@@ -884,7 +906,7 @@ public class Start extends javax.swing.JFrame {
     private boolean isValidGrade(double grade) {
         return grade >= 0 && grade <= 20;
     }
-    
+
     // Metodo para calcular el promedio de las notas
     private double calculateAverage(double... grades) {
         double sum = 0;
@@ -919,7 +941,6 @@ public class Start extends javax.swing.JFrame {
         model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int rowIndx, int columnIndex) {
-                // Permitir la edición solo si estamos en la fila editable
                 if (rowIndx == editableRow) {
                     return canEdit[columnIndex];
                 }
